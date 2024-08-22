@@ -1,12 +1,13 @@
 name: CI
 
+# 触发条件：推送到任何分支，或提交 Pull Request 时触发
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
     branches:
-      - master
+      - main
 
 jobs:
   build:
@@ -16,7 +17,7 @@ jobs:
       matrix:
         node-version: [14.x, 16.x, 18.x]
 
-     steps:
+    steps:
       # 检出代码库
       - name: Checkout code
         uses: actions/checkout@v3
