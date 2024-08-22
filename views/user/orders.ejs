@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>我的订单</title>
+    <style>
+      /* General Styles */
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+      }
+
+      /* Container */
+      .container {
+        width: 100%;
+        max-width: 1200px;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Heading */
+      h1 {
+        font-size: 24px;
+        color: #333;
+        margin-bottom: 20px;
+      }
+
+      /* Order List */
+      .order-list {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 20px;
+      }
+
+      .order-list th,
+      .order-list td {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+        text-align: left;
+      }
+
+      .order-list th {
+        background-color: #f8f8f8;
+      }
+
+      .order-list .item-image img {
+        width: 50px;
+        height: auto;
+        border-radius: 4px;
+      }
+
+      .order-list .order-actions button {
+        padding: 5px 10px;
+        border: none;
+        border-radius: 4px;
+        background-color: #3498db;
+        color: #fff;
+        cursor: pointer;
+        margin-right: 5px;
+      }
+
+      .order-list .order-actions button:hover {
+        background-color: #2980b9;
+      }
+
+      /* Order Details */
+      .order-details {
+        display: none;
+        padding: 20px;
+        background-color: #f9f9f9;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        margin-top: 10px;
+      }
+
+      .order-details h3 {
+        margin-top: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>我的订单</h1>
+
+      <!-- Orders List -->
+      <table class="order-list">
+        <thead>
+          <tr>
+            <th>订单编号</th>
+            <th>商品信息</th>
+            <th>总金额</th>
+            <th>订单状态</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>#001</td>
+            <td class="item-image">
+              <img src="https://via.placeholder.com/50" alt="Product Image" />
+              商品 1
+            </td>
+            <td>$50.00</td>
+            <td>已发货</td>
+            <td class="order-actions">
+              <button class="view-details">查看详情</button>
+            </td>
+          </tr>
+          <tr>
+            <td>#002</td>
+            <td class="item-image">
+              <img src="https://via.placeholder.com/50" alt="Product Image" />
+              商品 2
+            </td>
+            <td>$30.00</td>
+            <td>待发货</td>
+            <td class="order-actions">
+              <button class="view-details">查看详情</button>
+            </td>
+          </tr>
+          <!-- Add more orders as needed -->
+        </tbody>
+      </table>
+
+      <!-- Order Details -->
+      <div class="order-details" id="order-details">
+        <h3>订单编号: <span id="order-id">#001</span></h3>
+        <p><strong>商品列表:</strong></p>
+        <ul id="product-list">
+          <li>商品 1 - $50.00</li>
+          <!-- Add more items as needed -->
+        </ul>
+        <p><strong>总金额:</strong> $50.00</p>
+        <p><strong>订单状态:</strong> 已发货</p>
+        <button id="close-details">关闭</button>
+      </div>
+    </div>
+
+    <script>
+      // JavaScript for handling order details visibility
+      document.querySelectorAll(".view-details").forEach((button) => {
+        button.addEventListener("click", function () {
+          const orderDetails = document.getElementById("order-details");
+          const orderId = this.closest("tr").children[0].textContent;
+          const productList = this.closest("tr").children[1].textContent;
+          const totalAmount = this.closest("tr").children[2].textContent;
+          const status = this.closest("tr").children[3].textContent;
+
+          document.getElementById("order-id").textContent = orderId;
+          document.getElementById("product-list").innerHTML = productList;
+          document
+            .getElementById("order-details")
+            .querySelector(
+              "p:nth-of-type(1)"
+            ).innerHTML = `<strong>商品列表:</strong> ${productList}`;
+          document
+            .getElementById("order-details")
+            .querySelector(
+              "p:nth-of-type(2)"
+            ).textContent = `总金额: ${totalAmount}`;
+          document
+            .getElementById("order-details")
+            .querySelector(
+              "p:nth-of-type(3)"
+            ).textContent = `订单状态: ${status}`;
+
+          orderDetails.style.display = "block";
+        });
+      });
+
+      document
+        .getElementById("close-details")
+        .addEventListener("click", function () {
+          document.getElementById("order-details").style.display = "none";
+        });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,45 @@
+/* Navigation Bar */
+.navbar {
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #333;
+  color: #fff;
+  padding: 10px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  top: 0;
+  z-index: 1000;
+}
+
+.navbar .left,
+.navbar .right {
+  display: flex;
+  align-items: center;
+}
+
+.navbar .left .logo {
+  display: flex;
+  align-items: center;
+  column-gap: 8px;
+  font-size: 24px;
+  text-decoration: none;
+  color: #fff;
+}
+
+.navbar .right {
+  gap: 15px;
+}
+
+.navbar .right a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 18px;
+  padding: 10px;
+}
+
+.navbar .right a:hover {
+  background-color: #555;
+  border-radius: 4px;
+}

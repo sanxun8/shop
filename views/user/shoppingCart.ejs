@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('../partials/head.ejs') %>
+  <body>
+    <style>
+      /* Container */
+      .container {
+        max-width: 1200px;
+        margin: 84px auto 20px;
+        /* margin: 64px auto 20px; */
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Shopping Cart Header */
+      .header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 20px;
+      }
+
+      .header h1 {
+        margin: 0;
+        flex: 1;
+        font-size: 24px;
+        color: #333;
+      }
+
+      .header .actions {
+        display: flex;
+        align-items: center;
+      }
+
+      .header .actions button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        background-color: #e74c3c;
+        color: #fff;
+        cursor: pointer;
+        margin-left: 10px;
+      }
+
+      .header .actions button:hover {
+        background-color: #c0392b;
+      }
+
+      /* Cart List */
+      .cart-list {
+        border-collapse: collapse;
+        width: 100%;
+      }
+
+      .cart-list th,
+      .cart-list td {
+        padding: 10px;
+        border-bottom: 1px solid #ddd;
+        text-align: left;
+      }
+
+      .cart-list th {
+        background-color: #f8f8f8;
+      }
+
+      .cart-list .item-image img {
+        width: 100px;
+        height: auto;
+        border-radius: 4px;
+      }
+
+      .cart-list .item-actions button {
+        padding: 5px 10px;
+        border: none;
+        border-radius: 4px;
+        background-color: #e74c3c;
+        color: #fff;
+        cursor: pointer;
+      }
+
+      .cart-list .item-actions button:hover {
+        background-color: #c0392b;
+      }
+
+      /* Footer */
+      .table-footer {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: 20px;
+      }
+
+      .table-footer .total {
+        font-size: 18px;
+        color: #333;
+      }
+
+      .table-footer .checkout-button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 4px;
+        background-color: #3498db;
+        color: #fff;
+        cursor: pointer;
+      }
+
+      .table-footer .checkout-button:hover {
+        background-color: #2980b9;
+      }
+    </style>
+
+    <%- include('../partials/nav.ejs') %>
+
+    <div class="container">
+      <!-- Shopping Cart Header -->
+      <div class="header">
+        <h1>购物车</h1>
+        <div class="actions">
+          <button id="delete-selected">删除选中商品</button>
+          <button id="empty-cart">清空购物车</button>
+        </div>
+      </div>
+
+      <!-- Cart List -->
+      <table class="cart-list">
+        <thead>
+          <tr>
+            <th><input type="checkbox" id="select-all" /> 全选</th>
+            <th>商品图片</th>
+            <th>商品名称</th>
+            <th>单价</th>
+            <th>数量</th>
+            <th>总价</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><input type="checkbox" class="item-checkbox" /></td>
+            <td class="item-image">
+              <img src="https://via.placeholder.com/100" alt="Product Image" />
+            </td>
+            <td>商品 1</td>
+            <td>$50.00</td>
+            <td>1</td>
+            <td>$50.00</td>
+            <td class="item-actions">
+              <button class="delete-item">删除</button>
+            </td>
+          </tr>
+          <tr>
+            <td><input type="checkbox" class="item-checkbox" /></td>
+            <td class="item-image">
+              <img src="https://via.placeholder.com/100" alt="Product Image" />
+            </td>
+            <td>商品 2</td>
+            <td>$30.00</td>
+            <td>2</td>
+            <td>$60.00</td>
+            <td class="item-actions">
+              <button class="delete-item">删除</button>
+            </td>
+          </tr>
+          <!-- Add more items as needed -->
+        </tbody>
+      </table>
+
+      <!-- Footer -->
+      <div class="table-footer">
+        <div class="total">总计: ￥110.00</div>
+        <button class="checkout-button">结算</button>
+      </div>
+    </div>
+
+    <%- include('../partials/footer.ejs') %>
+
+    <script>
+      // JavaScript for handling item deletion and selection
+      document
+        .getElementById("delete-selected")
+        .addEventListener("click", () => {
+          document
+            .querySelectorAll(".item-checkbox:checked")
+            .forEach((checkbox) => {
+              checkbox.closest("tr").remove();
+            });
+        });
+
+      document.getElementById("empty-cart").addEventListener("click", () => {
+        document.querySelector("tbody").innerHTML = "";
+      });
+
+      document
+        .getElementById("select-all")
+        .addEventListener("change", function () {
+          document.querySelectorAll(".item-checkbox").forEach((checkbox) => {
+            checkbox.checked = this.checked;
+          });
+        });
+
+      document.querySelectorAll(".delete-item").forEach((button) => {
+        button.addEventListener("click", function () {
+          this.closest("tr").remove();
+        });
+      });
+    </script>
+  </body>
+</html>

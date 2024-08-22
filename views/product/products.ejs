@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+  <%- include('../partials/head.ejs') %>
+  <body>
+    <style>
+      /* Search Bar */
+      .search-bar {
+        color: #fff;
+        padding: 10px 20px;
+        margin-top: 84px;
+        /* margin-top: 64px; */
+        display: flex;
+        justify-content: center;
+      }
+
+      .search-bar input[type="text"] {
+        padding: 10px;
+        border: none;
+        border-radius: 4px;
+        width: 300px;
+        font-size: 16px;
+        border: 1px solid #cccccc;
+      }
+
+      .search-bar button {
+        padding: 10px 20px;
+        border: none;
+        background-color: #555;
+        color: #fff;
+        cursor: pointer;
+        border-radius: 4px;
+        margin-left: 10px;
+      }
+
+      .search-bar button:hover {
+        background-color: #777;
+      }
+
+      .product-container {
+        max-width: 1200px;
+        margin: 20px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+      }
+
+      /* Filter and Sort */
+      .filter-sort {
+        display: flex;
+        justify-content: space-between;
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .filter-sort .filters {
+        display: flex;
+        gap: 15px;
+      }
+
+      .filter-sort .filters select,
+      .filter-sort .sort select {
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        font-size: 16px;
+      }
+
+      /* Product Cards */
+      .product-list {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+        padding: 20px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+
+      .product-card {
+        width: calc(25% - 15px);
+        box-sizing: border-box;
+        text-align: center;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        overflow: hidden;
+        background-color: #fff;
+        padding: 10px;
+      }
+
+      .product-card img {
+        width: 100%;
+        height: auto;
+      }
+
+      .product-card h3 {
+        margin: 10px 0;
+        font-size: 18px;
+      }
+
+      .product-card p {
+        color: #888;
+        font-size: 16px;
+      }
+
+      .product-card .price {
+        font-size: 20px;
+        color: #333;
+        margin-top: 5px;
+      }
+    </style>
+    <%- include('../partials/nav.ejs') %>
+
+    <!-- Search Bar -->
+    <div class="search-bar">
+      <input id="search" type="text" placeholder="搜索产品..." />
+      <button id="search-btn">搜索</button>
+    </div>
+
+    <div class="product-container">
+      <!-- Filter and Sort -->
+      <div class="filter-sort">
+        <div class="filters">
+          <select name="category" id="category">
+            <option value="">全部分类</option>
+            <option value="electronics">电子产品</option>
+            <option value="fashion">时尚</option>
+            <option value="kitchen">厨房</option>
+            <option value="beauty">美丽</option>
+          </select>
+          <select name="priceRange" id="priceRange">
+            <option value="">价格区间</option>
+            <option value="0-50">￥0 - ￥50</option>
+            <option value="51-100">￥51 - ￥100</option>
+            <option value="101-200">￥101 - ￥200</option>
+            <option value="201-500">￥201 - ￥500</option>
+            <option value="500-99999">￥500+</option>
+          </select>
+        </div>
+        <div class="sort">
+          <select name="sort" id="sort">
+            <option value="">排序关联</option>
+            <option value="price-asc">价格: 低到高</option>
+            <option value="price-desc">价格: 高到低</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Product Cards -->
+      <div class="product-list">
+        <% products.forEach(item => { %>
+        <a class="product-card" href="/products/<%= item.id %>">
+          <img src="<%= item.img %>" alt="<%= item.title %>" />
+          <h3><%= item.title %></h3>
+          <p class="price">￥<%= item.price %></p>
+        </a>
+        <% }) %>
+      </div>
+    </div>
+
+    <%- include('../partials/footer.ejs') %>
+
+    <script>
+      console.log(location);
+      processSearchParams();
+      function processSearchParams() {
+        const searchParams = new URLSearchParams(location.search);
+        const productContainerEl = document.querySelector(".product-container");
+        const searchBtnEl = document.querySelector("#search-btn");
+        const searchEl = document.querySelector("#search");
+        const categoryEl = document.querySelector("#category");
+        const priceRangeEl = document.querySelector("#priceRange");
+        const sortEl = document.querySelector("#sort");
+
+        function updateSearchParams(key, value) {
+          searchParams.set(key, value);
+          location.search = `?${searchParams.toString()}`;
+        }
+
+        searchBtnEl.addEventListener("click", function () {
+          const el = document.querySelector("#search");
+
+          updateSearchParams("keyword", el.value);
+        });
+        productContainerEl.addEventListener("change", function (e) {
+          const { id } = e.target;
+          const el = document.getElementById(id);
+
+          updateSearchParams(id, el.value);
+        });
+        categoryEl.value = searchParams.get("category") || "";
+        priceRangeEl.value = searchParams.get("priceRange") || "";
+        sortEl.value = searchParams.get("sort") || "";
+        searchEl.value = searchParams.get("keyword") || "";
+      }
+    </script>
+  </body>
+</html>

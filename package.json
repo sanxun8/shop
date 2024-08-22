@@ -1,0 +1,40 @@
+{
+  "name": "shop",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "test:unit": "jest",
+    "test:e2e": "jest",
+    "lint": "eslint . --fix",
+    "format": "prettier --write '*.js'",
+    "db:create": "sequelize db:create",
+    "db:migrate": "sequelize db:migrate",
+    "db:migrate:undo:all": "sequelize db:migrate:undo:all",
+    "db:seed:all": "sequelize db:seed:all",
+    "db:seed:undo:all": "sequelize db:seed:undo:all",
+    "start": "cross-env DEBUG=shop:server NODE_ENV=development node ./bin/www"
+  },
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "ejs": "~2.6.1",
+    "express": "~4.16.1",
+    "http-errors": "~1.6.3",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "~1.9.1",
+    "mysql2": "^3.11.0",
+    "sequelize": "^6.37.3"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3",
+    "eslint": "^8.52.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "globals": "^15.9.0",
+    "jest": "^29.7.0",
+    "prettier": "^3.1.0",
+    "prettier-eslint": "^16.1.2",
+    "sequelize-cli": "^6.6.2"
+  }
+}
