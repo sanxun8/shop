@@ -1,9 +1,13 @@
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-  class UserModel extends Model {}
+  class ChildModel extends Model {
+    static associate(db) {
+      ChildModel.hasMany(db.review, { foreignKey: 'user_id' });
+    }
+  }
 
-  UserModel.init(
+  ChildModel.init(
     {
       id: {
         type: DataTypes.INTEGER,
@@ -39,18 +43,5 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  function createUser(data) {
-    return UserModel.create(data);
-  }
-
-  function getUser(where) {
-    return UserModel.findOne({
-      where,
-    });
-  }
-
-  return {
-    createUser,
-    getUser,
-  };
+  return ChildModel;
 };

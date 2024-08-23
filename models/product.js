@@ -1,9 +1,11 @@
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-  class ProductModel extends Model {}
+  class ChilModel extends Model {
+    static associate(db) {}
+  }
 
-  ProductModel.init(
+  ChilModel.init(
     {
       id: {
         type: DataTypes.INTEGER,
@@ -51,40 +53,5 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  function createProduct(data) {
-    return ProductModel.create(data);
-  }
-
-  function getHotProducts() {
-    return ProductModel.findAll({
-      raw: true,
-      where: {
-        is_hot: 1,
-      },
-    });
-  }
-
-  function getAllProducts(where, order) {
-    return ProductModel.findAll({
-      raw: true,
-      where,
-      order,
-    });
-  }
-
-  function getProduct(id) {
-    return ProductModel.findOne({
-      where: {
-        id,
-      },
-      raw: true,
-    });
-  }
-
-  return {
-    createProduct,
-    getHotProducts,
-    getAllProducts,
-    getProduct,
-  };
+  return ChilModel;
 };

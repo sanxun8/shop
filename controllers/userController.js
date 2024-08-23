@@ -17,7 +17,7 @@ const registerUser = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // 创建新用户
-    const user = await db.user.createUser({
+    const user = await db.user.create({
       username,
       email,
       password: hashedPassword,

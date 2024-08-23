@@ -1,9 +1,11 @@
 const { Model } = require('sequelize');
 
 module.exports = (sequelize, DataTypes) => {
-  class ShoppingCartModel extends Model {}
+  class ChildModel extends Model {
+    static associate(db) {}
+  }
 
-  ShoppingCartModel.init(
+  ChildModel.init(
     {
       id: {
         type: DataTypes.INTEGER,
@@ -39,9 +41,5 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  function createShoppingCart(data) {
-    return ShoppingCartModel.create(data);
-  }
-
-  return createShoppingCart;
+  return ChildModel;
 };

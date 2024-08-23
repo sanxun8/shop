@@ -10,7 +10,7 @@
       "type": "node"
     },
     {
-      "name": "Launch via NPM",
+      "name": "start",
       "request": "launch",
       "runtimeArgs": ["run-script", "start"],
       "runtimeExecutable": "npm",

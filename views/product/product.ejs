@@ -158,7 +158,7 @@
             <%= Array(item.stars).fill("★").join('') %> <%= Array(5 -
             item.stars).fill("☆").join('') %>
           </div>
-          <p class="reviewer"><%= item.username %></p>
+          <p class="reviewer"><%= item['user.username'] %></p>
           <p class="comment"><%= item.description %></p>
         </div>
         <% }) %>

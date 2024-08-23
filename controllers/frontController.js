@@ -1,21 +1,28 @@
 const { Op } = require('sequelize');
 
 async function showHome(req, res) {
-  db.product.getHotProducts().then(
-    (hotProducts) => {
-      res.render('index', {
-        title: '首页',
-        hotProducts,
-        partials: {
-          nav: true,
-          footer: true,
-        },
-      });
-    },
-    (err) => {
-      console.log(err.message);
-    }
-  );
+  db.product
+    .findAll({
+      raw: true,
+      where: {
+        is_hot: 1,
+      },
+    })
+    .then(
+      (hotProducts) => {
+        res.render('index', {
+          title: '首页',
+          hotProducts,
+          partials: {
+            nav: true,
+            footer: true,
+          },
+        });
+      },
+      (err) => {
+        console.log(err.message);
+      }
+    );
 }
 
 async function showProducts(req, res) {
@@ -53,29 +60,44 @@ async function showProducts(req, res) {
     order.push(value);
   }
 
-  db.product.getAllProducts(where, order).then(
-    (products) => {
-      res.render('product/products', {
-        title: '产品列表',
-        partials: {
-          nav: true,
-          footer: true,
-        },
-        products,
-      });
-    },
-    (err) => {
-      console.log(err.message);
-    }
-  );
+  db.product
+    .findAll({
+      raw: true,
+      where,
+      order,
+    })
+    .then(
+      (products) => {
+        res.render('product/products', {
+          title: '产品列表',
+          partials: {
+            nav: true,
+            footer: true,
+          },
+          products,
+        });
+      },
+      (err) => {
+        console.log(err.message);
+      }
+    );
 }
 
 async function showProduct(req, res) {
   const { id } = req.params;
 
   Promise.all([
-    db.product.getProduct(id),
-    db.review.getAllReview({ product_id: id }),
+    db.product.ChilModel.findOne({
+      where: {
+        id,
+      },
+      raw: true,
+    }),
+    db.review.ChildModel.findAll({
+      where: { product_id: id },
+      raw: true,
+      include: [{ model: db.user.UserModel, attributes: ['username'] }],
+    }),
   ]).then(
     ([product, reviews]) => {
       res.render('product/product', {

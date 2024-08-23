@@ -1,12 +1,11 @@
 function createShoppingCart(_req, res) {
-  db.shoppingCart.createShoppingCart().then(
+  db.shoppingCart.create().then(
     (data) => {
       const x = data;
       res.end();
     },
     (err) => {
       console.error(err.message);
-      console.trace(err.stack);
       const x = err;
     }
   );
