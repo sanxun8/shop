@@ -1,5 +1,10 @@
 const { Model } = require('sequelize');
 
+/**
+ * @param {typeof import('sequelize').Sequelize} sequelize - Sequelize 实例
+ * @param {typeof import('sequelize').DataTypes} DataTypes - DataTypes 工具
+ * @returns {typeof import('sequelize').Model} - 返回一个 Sequelize 模型构造函数
+ */
 module.exports = (sequelize, DataTypes) => {
   class ChildModel extends Model {
     static associate(db) {}
@@ -7,12 +12,6 @@ module.exports = (sequelize, DataTypes) => {
 
   ChildModel.init(
     {
-      id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-      },
       user_id: {
         type: DataTypes.INTEGER,
         allowNull: false,
@@ -23,14 +22,6 @@ module.exports = (sequelize, DataTypes) => {
       },
       amount: {
         type: DataTypes.INTEGER,
-        allowNull: false,
-      },
-      created_at: {
-        type: DataTypes.DATE,
-        allowNull: false,
-      },
-      updated_at: {
-        type: DataTypes.DATE,
         allowNull: false,
       },
     },

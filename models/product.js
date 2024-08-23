@@ -1,5 +1,10 @@
 const { Model } = require('sequelize');
 
+/**
+ * @param {typeof import('sequelize').Sequelize} sequelize - Sequelize 实例
+ * @param {typeof import('sequelize').DataTypes} DataTypes - DataTypes 工具
+ * @returns {typeof import('sequelize').Model} - 返回一个 Sequelize 模型构造函数
+ */
 module.exports = (sequelize, DataTypes) => {
   class ChilModel extends Model {
     static associate(db) {}
@@ -7,12 +12,6 @@ module.exports = (sequelize, DataTypes) => {
 
   ChilModel.init(
     {
-      id: {
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-      },
       title: {
         type: DataTypes.STRING(45),
         allowNull: false,
@@ -35,14 +34,6 @@ module.exports = (sequelize, DataTypes) => {
       },
       is_hot: {
         type: DataTypes.TINYINT(1),
-        allowNull: false,
-      },
-      created_at: {
-        type: DataTypes.DATE,
-        allowNull: false,
-      },
-      updated_at: {
-        type: DataTypes.DATE,
         allowNull: false,
       },
     },

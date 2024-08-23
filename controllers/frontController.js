@@ -87,16 +87,16 @@ async function showProduct(req, res) {
   const { id } = req.params;
 
   Promise.all([
-    db.product.ChilModel.findOne({
+    db.product.findOne({
       where: {
         id,
       },
       raw: true,
     }),
-    db.review.ChildModel.findAll({
+    db.review.findAll({
       where: { product_id: id },
       raw: true,
-      include: [{ model: db.user.UserModel, attributes: ['username'] }],
+      include: [{ model: db.user, attributes: ['username'] }],
     }),
   ]).then(
     ([product, reviews]) => {
