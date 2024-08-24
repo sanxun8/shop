@@ -9,6 +9,8 @@ module.exports = (sequelize, DataTypes) => {
   class ChildModel extends Model {
     static associate(db) {
       ChildModel.hasMany(db.review, { foreignKey: 'user_id' });
+      ChildModel.hasMany(db.shopping_cart, { foreignKey: 'user_id' });
+      ChildModel.hasMany(db.review, { foreignKey: 'user_id' });
     }
   }
 
@@ -17,10 +19,12 @@ module.exports = (sequelize, DataTypes) => {
       username: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true,
       },
       email: {
         type: DataTypes.STRING,
         allowNull: false,
+        unique: true,
       },
       password: {
         type: DataTypes.STRING,

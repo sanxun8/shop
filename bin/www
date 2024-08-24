@@ -14,11 +14,11 @@ global.db = db;
 db.sequelize
   .authenticate()
   .then(() => {
-    const port = 3000;
+    const port = 10002;
 
     const server = app.listen(port);
     server.on('error', function (err) {
-      console.err(err.message);
+      console.error(err.message);
     });
     server.on('listening', function () {
       console.log(`server is running in http://localhost:${port}`);

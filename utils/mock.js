@@ -1,6 +1,23 @@
 const MockUtil = (function () {
-  function generateRandomName() {
-    console.log('generateRandomName');
+  function generateLowercaseChars(min = 0, max = 10) {
+    const strs = [];
+    for (let i = 97; i <= 122; i += 1) {
+      strs.push(String.fromCharCode(i));
+    }
+
+    let result = '';
+    for (
+      let i = 0, len = Math.ceil(Math.random() * (max - min)) + min;
+      i < len;
+      i += 1
+    ) {
+      result += strs[Math.floor(Math.random() * strs.length)];
+    }
+
+    return result;
+  }
+
+  function getFullName() {
     const firstNames = [
       '赵',
       '钱',
@@ -56,43 +73,32 @@ const MockUtil = (function () {
     // 生成完整的人名
     return randomFullName;
   }
-  const proxyGenerateRandomName = (function () {
-    const names = new Set();
+
+  function getEmail() {
+    const charts = generateLowercaseChars(6, 10);
+
+    return `${charts}@163.com`;
+  }
+
+  const proxyGenerateUnique = function (fn) {
+    const set = new Set();
 
     return function () {
-      let name = generateRandomName();
+      let result;
 
-      while (names.has(name)) {
-        name = generateRandomName();
-      }
+      do {
+        result = fn();
+      } while (set.has(result));
 
-      names.add(name);
+      set.add(result);
 
-      return name;
+      return result;
     };
-  })();
-
-  function generateLowercaseChars(min = 0, max = 10) {
-    const strs = [];
-    for (let i = 97; i <= 122; i += 1) {
-      strs.push(String.fromCharCode(i));
-    }
-
-    let result = '';
-    for (
-      let i = 0, len = Math.ceil(Math.floor() * (max - min)) + min;
-      i < len;
-      i += 1
-    ) {
-      result += Math.floor(Math.random() * strs.length);
-    }
-
-    return result;
-  }
+  };
 
   // function generate({ type, count, handler }) {
   //   const types = {
-  //     name: proxyGenerateRandomName,
+  //     name: proxygetFullName,
   //   };
 
   //   for (let i = 0; i < count; i++) {
@@ -102,8 +108,8 @@ const MockUtil = (function () {
   // }
 
   return {
-    generateRandomName: proxyGenerateRandomName,
-    generateLowercaseChars,
+    getFullName: proxyGenerateUnique(getFullName),
+    getEmail: proxyGenerateUnique(getEmail),
   };
 })();
 

@@ -6,11 +6,14 @@ const { Model } = require('sequelize');
  * @returns {typeof import('sequelize').Model} - 返回一个 Sequelize 模型构造函数
  */
 module.exports = (sequelize, DataTypes) => {
-  class ChilModel extends Model {
-    static associate(db) {}
+  class ChildModel extends Model {
+    static associate(db) {
+      ChildModel.hasMany(db.shopping_cart, { foreignKey: 'product_id' });
+      ChildModel.hasMany(db.review, { foreignKey: 'product_id' });
+    }
   }
 
-  ChilModel.init(
+  ChildModel.init(
     {
       title: {
         type: DataTypes.STRING(45),
@@ -44,5 +47,5 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  return ChilModel;
+  return ChildModel;
 };

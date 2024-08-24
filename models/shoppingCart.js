@@ -7,7 +7,10 @@ const { Model } = require('sequelize');
  */
 module.exports = (sequelize, DataTypes) => {
   class ChildModel extends Model {
-    static associate(db) {}
+    static associate(db) {
+      ChildModel.belongsTo(db.user, { foreignKey: 'user_id' });
+      ChildModel.belongsTo(db.product, { foreignKey: 'product_id' });
+    }
   }
 
   ChildModel.init(
@@ -27,8 +30,14 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: 'shopping_cat',
+      modelName: 'shopping_cart',
       underscored: true, // 启用蛇形命名
+      indexes: [
+        {
+          unique: true,
+          fields: ['user_id', 'product_id'],
+        },
+      ],
     }
   );
 

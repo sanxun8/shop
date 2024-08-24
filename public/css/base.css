@@ -7,10 +7,16 @@ body {
   font-family: Arial, sans-serif;
   background-color: #f4f4f4;
 }
-button {
+
+input[type='submit'],
+button,
+a {
   cursor: pointer;
 }
-button[disabled] {
+
+input[type='submit'][disabled],
+button[disabled],
+a[disabled] {
   opacity: 0.5;
   cursor: not-allowed;
 }

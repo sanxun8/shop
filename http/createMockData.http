@@ -1,2 +1,0 @@
-post /dev/createMockData HTTP/1.1
-host: localhost:3000  

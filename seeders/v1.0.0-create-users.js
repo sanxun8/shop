@@ -1,16 +1,24 @@
 const bcrypt = require('bcrypt');
-const { generateRandomName, generateLowercaseChars } = require('../utils/mock');
+const { getFullName, getEmail } = require('../utils/mock');
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface) {
     const users = [];
-    const hashedPassword = await bcrypt.hash(generateLowercaseChars(6, 10), 10);
+    const hashedPassword = await bcrypt.hash('123456', 10);
+
+    users.push({
+      username: 'admin',
+      email: `admin@163.com`,
+      password: hashedPassword,
+      created_at: new Date(),
+      updated_at: new Date(),
+    });
 
     for (let i = 0; i < 10; i += 1) {
       users.push({
-        username: generateRandomName(),
-        email: `${generateLowercaseChars(6, 10)}@163.com`,
+        username: getFullName(),
+        email: getEmail(),
         password: hashedPassword,
         created_at: new Date(),
         updated_at: new Date(),

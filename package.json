@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "test:unit": "jest",
-    "test:e2e": "jest",
+    "test:e2e": "cypress open",
     "lint": "eslint . --fix",
     "format": "prettier --write '*.js'",
     "db:create": "sequelize db:create",
@@ -20,13 +20,14 @@
     "ejs": "~2.6.1",
     "express": "~4.16.1",
     "http-errors": "~1.6.3",
-    "jsonwebtoken": "^9.0.2",
     "morgan": "~1.9.1",
     "mysql2": "^3.11.0",
     "sequelize": "^6.37.3"
   },
   "devDependencies": {
+    "@types/express-serve-static-core": "^4.19.5",
     "cross-env": "^7.0.3",
+    "cypress": "^13.13.3",
     "eslint": "^8.52.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",

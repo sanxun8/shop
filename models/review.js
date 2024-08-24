@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
   class ChildModel extends Model {
     static associate(db) {
       ChildModel.belongsTo(db.user, { foreignKey: 'user_id' });
+      ChildModel.belongsTo(db.product, { foreignKey: 'product_id' });
     }
   }
 

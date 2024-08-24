@@ -1,4 +1,5 @@
 const { Op } = require('sequelize');
+const createError = require('http-errors');
 
 async function showHome(req, res) {
   db.product
@@ -20,9 +21,84 @@ async function showHome(req, res) {
         });
       },
       (err) => {
+        res.render('error', {
+          err,
+        });
         console.log(err.message);
       }
     );
+}
+
+function showLogin(req, res) {
+  res.render('login');
+}
+
+function showRegister(req, res) {
+  res.render('register');
+}
+
+function showAccount(req, res, next) {
+  res.render('user/account', {
+    title: '我的账户',
+    partials: {
+      nav: true,
+      footer: true,
+    },
+  });
+}
+
+function showShoppingCarts(req, res, next) {
+  const { user_id } = req.cookies;
+
+  db.shopping_cart
+    .findAll({
+      raw: true,
+      include: [
+        {
+          model: db.product,
+        },
+      ],
+      where: {
+        user_id,
+      },
+    })
+    .then(
+      (shoppingCarts) => {
+        res.render('user/shoppingCarts', {
+          title: '我的购物车',
+          partials: {
+            nav: true,
+            footer: true,
+          },
+          shoppingCarts,
+        });
+      },
+      (err) => {
+        res.render('error', {
+          err,
+        });
+        console.error(err.message);
+      }
+    );
+}
+
+function showReviews(req, res, next) {
+  res.render('user/reviews', {
+    title: '我的评论',
+    partials: {
+      nav: true,
+      footer: true,
+    },
+  });
+}
+function showOrders(req, res, next) {
+  res.render('user/orders', {
+    title: '我的订单',
+    partials: {
+      nav: true,
+      footer: true,
+    },
+  });
 }
 
 async function showProducts(req, res) {
@@ -117,7 +193,13 @@ async function showProduct(req, res) {
 }
 
 module.exports = {
+  showAccount,
+  showOrders,
+  showShoppingCarts,
+  showReviews,
   showHome,
   showProducts,
   showProduct,
+  showLogin,
+  showRegister,
 };

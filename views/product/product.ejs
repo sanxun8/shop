@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
-  <%- include('../partials/head.ejs') %>
+<%- include('../partials/head.ejs') %>
+
   <body>
     <style>
       /* General Styles */
@@ -124,71 +125,118 @@
 
     <%- include('../partials/nav.ejs') %>
 
-    <div class="product-details">
-      <!-- Product Preview -->
-      <div class="preview">
-        <div class="main-image">
-          <img src="<%= product.img %>" alt="<%= product.title %>" />
+      <div class="product-details">
+        <!-- Product Preview -->
+        <div class="preview">
+          <div class="main-image">
+            <img src="<%= product.img %>" alt="<%= product.title %>" />
+          </div>
+
+          <!-- Product Info -->
+          <div class="info">
+            <h1>
+              <%= product.title %>
+            </h1>
+            <p class="price">￥<%= product.price %>
+            </p>
+            <p class="description">
+              <%= product.description %>
+            </p>
+            <p>
+              <label for="amount">数量：</label>
+              <input type="number" id="amount" value="1" />
+            </p>
+            <div class="buttons">
+              <button data-handler="" class="buy-now" disabled>现在购买</button>
+              <button data-handler="addToCart" class="add-to-cart">
+                添加到购物车
+              </button>
+            </div>
+          </div>
         </div>
 
-        <!-- Product Info -->
-        <div class="info">
-          <h1><%= product.title %></h1>
-          <p class="price">￥<%= product.price %></p>
-          <p class="description"><%= product.description %></p>
-          <p>
-            <label for="amount">数量：</label>
-            <input type="number" id="amount" value="1" />
-          </p>
-          <div class="buttons">
-            <button data-handler="" class="buy-now">现在购买</button>
-            <button data-handler="addToCart" class="add-to-cart">
-              添加到购物车
-            </button>
-          </div>
+        <!-- Reviews -->
+        <div class="reviews">
+          <h2>客户评论</h2>
+          <% reviews.forEach(item=> { %>
+            <div class="review">
+              <div class="rating">
+                <%= Array(item.stars).fill("★").join('') %>
+                  <%= Array(5 - item.stars).fill("☆").join('') %>
+              </div>
+              <p class="reviewer">
+                <%= item['user.username'] %>
+              </p>
+              <p class="comment">
+                <%= item.description %>
+              </p>
+            </div>
+            <% }) %>
         </div>
       </div>
 
-      <!-- Reviews -->
-      <div class="reviews">
-        <h2>客户评论</h2>
-        <% reviews.forEach(item => { %>
-        <div class="review">
-          <div class="rating">
-            <%= Array(item.stars).fill("★").join('') %> <%= Array(5 -
-            item.stars).fill("☆").join('') %>
-          </div>
-          <p class="reviewer"><%= item['user.username'] %></p>
-          <p class="comment"><%= item.description %></p>
-        </div>
-        <% }) %>
-      </div>
-    </div>
-
-    <%- include('../partials/footer.ejs') %>
+      <%- include('../partials/footer.ejs') %>
   </body>
+  <script src="/js/frame.js"></script>
 
   <script>
-    document.addEventListener("click", function (e) {
+    loadScript('/js/toast.js');
+    loadScript('/js/modal.js');
+    loadScript('/js/toast.js');
+
+    loadStyle('/css/base.css')
+    loadStyle('/css/toast.css')
+    loadStyle('/css/modal.css')
+
+    document.addEventListener('click', function (e) {
       const strategies = {
-        addToCart: function () {
-          fetch("/api/shoppingCarts", {
-            method: "post",
-          }).then(
-            (res) => {
-              let x = res;
+        addToCart: async function (e) {
+          console.log('addToCart')
+          e.target.setAttribute('disabled', 'disabled');
+
+          const [, , product_id] = location.pathname.split('/');
+          const amountEl = document.querySelector('#amount');
+
+          const statusStrategies = {
+            401: function () {
+              location.assign(`/login?from=${encodeURIComponent(location.pathname)}`);
             },
-            (err) => {
-              let x = err;
+            500: function () {
+              showModal('添加失败', '很抱歉，商品未能成功加入购物车。请稍后重试，或联系客户支持以获取帮助。');
+              e.target.removeAttribute('disabled');
+            },
+            success: function () {
+              showToast();
             }
-          );
+          }
+
+          try {
+            const response = await fetch('/api/shoppingCarts', {
+              method: 'post',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                amount: amountEl.value,
+                product_id,
+              }),
+            })
+
+            const fn = statusStrategies[response.status] || statusStrategies.success;
+            fn();
+          } catch (err) {
+            console.log(err.message);
+            showModal('添加失败', '很抱歉，商品未能成功加入购物车。请稍后重试，或联系客户支持以获取帮助。');
+          }
         },
       };
       let { handler } = e.target.dataset;
 
       if (handler) {
-        strategies[handler]();
+        strategies[handler](e);
       }
     });
+
   </script>
+
 </html>

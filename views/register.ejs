@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>注册</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .container {
+      width: 300px;
+      padding: 20px;
+      background-color: #fff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 5px;
+    }
+
+    .container h2 {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+
+    .container input[type="text"],
+    .container input[type="email"],
+    .container input[type="password"] {
+      width: 100%;
+      box-sizing: border-box;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 3px;
+    }
+
+    .container input[type="submit"] {
+      width: 100%;
+      padding: 10px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .container input[type="submit"]:hover {
+      background-color: #0056b3;
+    }
+
+    .container .link {
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .container .link a {
+      color: #007bff;
+      text-decoration: none;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <h2>注册</h2>
+    <form id="form">
+      <input type="text" name="username" placeholder="账户名" required>
+      <input type="email" name="email" placeholder="邮箱" required>
+      <input type="password" name="password" placeholder="密码" required>
+      <input type="submit" value="注册">
+    </form>
+    <div class="link">
+      <p>已经有账户? <a href="javascript:void();" onclick="navigateToLogin()">登录</a></p>
+    </div>
+  </div>
+</body>
+
+<script src="/js/frame.js"></script>
+
+<script>
+  loadScript('/js/toast.js');
+  loadScript('/js/modal.js');
+  loadScript('/js/toast.js');
+
+  loadStyle('/css/base.css')
+  loadStyle('/css/toast.css')
+  loadStyle('/css/modal.css')
+
+  function navigateToLogin() {
+    const params = new URLSearchParams(location.search)
+    const from = params.get('from');
+    if (from) {
+      location.replace(`/register?from=${encodeURIComponent(from)}`)
+    } else {
+      location.replace('/register')
+    }
+  }
+
+  const form = document.forms[0]
+  const submitEl = document.querySelector('input[type=submit]');
+
+  form.addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    submitEl.setAttribute('disabled', 'disabled');
+
+    const statusStrategies = {
+      400: function () {
+        submitEl.removeAttribute('disabled');
+        showModal('注册失败', '该用户名或邮箱已被注册，请尝试重新输入。')
+      },
+      401: function () {
+        location.assign(`/login?from=${encodeURIComponent(location.pathname)}`);
+      },
+      500: function () {
+        submitEl.removeAttribute('disabled');
+        showModal('注册失败', '很抱歉，注册失败。请稍后重试或联系客服寻求帮助。')
+      },
+      success: function () {
+        showToast();
+
+        const params = new URLSearchParams(location.search);
+        const from = params.get('from') || '/';
+
+        location.replace(from);
+      }
+    }
+
+    try {
+      const response = await fetch('/api/user/register', {
+        method: 'post',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          username: form.elements.username.value,
+          email: form.elements.email.value,
+          password: form.elements.password.value,
+        })
+      });
+
+      const fn = statusStrategies[response.status] || statusStrategies.success;
+      fn();
+    } catch (err) {
+      console.log(err.message);
+      showModal('注册失败', '很抱歉，注册失败。请稍后重试或联系客服寻求帮助。')
+    }
+
+
+  })
+</script>
+
+</html>
