@@ -149,7 +149,7 @@
       const fn = statusStrategies[response.status] || statusStrategies.success;
       fn();
     } catch (err) {
-      console.log(err.message);
+      processError(err);
       showModal('注册失败', '很抱歉，注册失败。请稍后重试或联系客服寻求帮助。')
     }
 

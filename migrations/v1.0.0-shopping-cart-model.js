@@ -1,3 +1,5 @@
+const { processError } = require('../utils/error');
+
 /** @type {import('sequelize-cli').Migration} */
 
 module.exports = {
@@ -42,14 +44,14 @@ module.exports = {
         }
       );
     } catch (err) {
-      console.log(err.message);
+      processError(err);
     }
   },
   async down(queryInterface) {
     try {
       await queryInterface.dropTable('shopping_carts');
     } catch (err) {
-      console.log(err.message);
+      processError(err);
     }
   },
 };

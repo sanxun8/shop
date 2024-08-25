@@ -1,13 +1,15 @@
 const bcrypt = require('bcrypt');
 const createError = require('http-errors');
+const { processError } = require('../utils/error');
+const { sequelize } = require('../models');
 
 // 用户注册
-const registerUser = async (req, res) => {
+exports.registerUser = async function (req, res) {
   try {
     const { username, email, password } = req.body;
 
     // 检查用户是否已存在
-    const existingUser = await db.user.count({
+    const existingUser = await sequelize.models.user.count({
       where: { email },
     });
     if (existingUser) {
@@ -18,26 +20,30 @@ const registerUser = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
 
     // 创建新用户
-    const user = await db.user.create({
+    const user = await sequelize.models.user.create({
       username,
       email,
       password: hashedPassword,
     });
 
     // 返回成功响应
-    res.status(201).json({ message: 'User registered successfully', user });
-  } catch (error) {
-    res.status(500).json({ message: 'Server error', error });
+    res.status(200).json({});
+  } catch (err) {
+    processError(err.message);
+    res.status(500).json({ message: err.message });
   }
 };
 
 // 用户登录
-const loginUser = async (req, res) => {
+exports.loginUser = async function (req, res) {
   try {
     const { email, password } = req.body;
 
     // 查找用户
-    const user = await db.user.findOne({ where: { email }, raw: true });
+    const user = await sequelize.models.user.findOne({
+      where: { email },
+      raw: true,
+    });
     if (!user) {
       return res.render('error', { err: createError(400, '无效邮箱或密码') });
     }
@@ -58,13 +64,8 @@ const loginUser = async (req, res) => {
 
       return from ? res.redirect(`${from}`) : res.redirect('/');
     }
-  } catch (error) {
-    res.status(500).json({ message: 'Server error', error });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+    processError(err);
   }
-};
-
-// 导出控制器
-module.exports = {
-  registerUser,
-  loginUser,
 };

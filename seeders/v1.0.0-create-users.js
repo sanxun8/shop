@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const { getFullName, getEmail } = require('../utils/mock');
+const { processError } = require('../utils/error');
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -28,7 +29,7 @@ module.exports = {
     try {
       await queryInterface.bulkInsert('users', users);
     } catch (err) {
-      console.log(err.message);
+      processError(err);
     }
   },
 
@@ -36,7 +37,7 @@ module.exports = {
     try {
       queryInterface.bulkDelete('users', null, {});
     } catch (err) {
-      console.log(err.message);
+      processError(err);
     }
   },
 };

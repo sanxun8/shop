@@ -81,8 +81,8 @@ const fetchData = async (url, options = {}) => {
     // 返回 JSON 格式的数据
     const data = await response.json();
     return data;
-  } catch (error) {
-    console.error('Fetch error:', error);
-    throw error; // 继续向上抛出错误，方便调用者处理
+  } catch (err) {
+    console.error(err.message);
+    throw err; // 继续向上抛出错误，方便调用者处理
   }
 };

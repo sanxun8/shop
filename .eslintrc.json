@@ -3,8 +3,7 @@
     "browser": true,
     "es2021": true,
     "node": true,
-    "jest": true,
-    "cypress": true
+    "jest": true
   },
   "extends": ["eslint:recommended", "plugin:prettier/recommended"],
   "plugins": ["prettier"],
@@ -13,7 +12,7 @@
     "sourceType": "module"
   },
   "globals": {
-    "db": "writable"
+    "render": "writable"
   },
   "rules": {
     "prettier/prettier": ["error", { "endOfLine": "auto" }],

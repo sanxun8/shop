@@ -1,3 +1,5 @@
+const { processError } = require('../utils/error');
+
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, DataTypes) {
@@ -35,14 +37,14 @@ module.exports = {
         },
       });
     } catch (err) {
-      console.log(err.message);
+      processError(err);
     }
   },
   async down(queryInterface) {
     try {
       await queryInterface.dropTable('reviews');
     } catch (err) {
-      console.log(err.message);
+      processError(err);
     }
   },
 };

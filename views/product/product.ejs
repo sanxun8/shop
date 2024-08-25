@@ -225,7 +225,6 @@
             const fn = statusStrategies[response.status] || statusStrategies.success;
             fn();
           } catch (err) {
-            console.log(err.message);
             showModal('添加失败', '很抱歉，商品未能成功加入购物车。请稍后重试，或联系客户支持以获取帮助。');
           }
         },

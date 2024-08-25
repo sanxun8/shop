@@ -1,4 +1,5 @@
 const { products } = require('../db/data.json');
+const { processError } = require('../utils/error');
 
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
@@ -16,14 +17,14 @@ module.exports = {
         })
       );
     } catch (err) {
-      console.log(err.message);
+      processError(err);
     }
   },
   async down(queryInterface) {
     try {
       queryInterface.bulkDelete('products', null, {});
     } catch (err) {
-      console.log(err.message);
+      processError(err);
     }
   },
 };

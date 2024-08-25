@@ -1,43 +1,40 @@
 const { Op } = require('sequelize');
-const createError = require('http-errors');
+const { sequelize } = require('../models');
+const { processError } = require('../utils/error');
 
-async function showHome(req, res) {
-  db.product
-    .findAll({
+exports.showHome = async function (req, res) {
+  try {
+    const hotProducts = await sequelize.models.product.findAll({
       raw: true,
       where: {
         is_hot: 1,
       },
-    })
-    .then(
-      (hotProducts) => {
-        res.render('index', {
-          title: '首页',
-          hotProducts,
-          partials: {
-            nav: true,
-            footer: true,
-          },
-        });
+    });
+    res.render('index', {
+      title: '首页',
+      hotProducts,
+      partials: {
+        nav: true,
+        footer: true,
       },
-      (err) => {
-        res.render('error', {
-          err,
-        });
-        console.log(err.message);
-      }
-    );
-}
+    });
+  } catch (err) {
+    res.render('error', {
+      err,
+    });
+    processError(err);
+  }
+};
 
-function showLogin(req, res) {
+exports.showLogin = async function (req, res) {
   res.render('login');
-}
+};
 
-function showRegister(req, res) {
+exports.showRegister = async function (req, res) {
   res.render('register');
-}
+};
 
-function showAccount(req, res, next) {
+exports.showAccount = async function (req, res, next) {
   res.render('user/account', {
     title: '我的账户',
     partials: {
@@ -45,44 +42,41 @@ function showAccount(req, res, next) {
       footer: true,
     },
   });
-}
+};
 
-function showShoppingCarts(req, res, next) {
+exports.showShoppingCarts = async function (req, res, next) {
   const { user_id } = req.cookies;
 
-  db.shopping_cart
-    .findAll({
+  try {
+    const shoppingCarts = await sequelize.models.shopping_cart.findAll({
       raw: true,
       include: [
         {
-          model: db.product,
+          model: sequelize.models.product,
         },
       ],
       where: {
         user_id,
       },
-    })
-    .then(
-      (shoppingCarts) => {
-        res.render('user/shoppingCarts', {
-          title: '我的购物车',
-          partials: {
-            nav: true,
-            footer: true,
-          },
-          shoppingCarts,
-        });
-      },
-      (err) => {
-        res.render('error', {
-          err,
-        });
-        console.error(err.message);
-      }
-    );
-}
+    });
 
-function showReviews(req, res, next) {
+    res.render('user/shoppingCarts', {
+      title: '我的购物车',
+      partials: {
+        nav: true,
+        footer: true,
+      },
+      shoppingCarts,
+    });
+  } catch (err) {
+    res.render('error', {
+      err,
+    });
+    processError(err);
+  }
+};
+
+exports.showReviews = async function (req, res, next) {
   res.render('user/reviews', {
     title: '我的评论',
     partials: {
@@ -90,8 +84,9 @@ function showReviews(req, res, next) {
       footer: true,
     },
   });
-}
-function showOrders(req, res, next) {
+};
+
+exports.showOrders = async function (req, res, next) {
   res.render('user/orders', {
     title: '我的订单',
     partials: {
@@ -99,9 +94,9 @@ function showOrders(req, res, next) {
       footer: true,
     },
   });
-}
+};
 
-async function showProducts(req, res) {
+exports.showProducts = async function (req, res) {
   const { category, keyword, priceRange, sort } = req.query;
   const where = {};
   const order = [];
@@ -136,70 +131,54 @@ async function showProducts(req, res) {
     order.push(value);
   }
 
-  db.product
-    .findAll({
+  try {
+    const products = await sequelize.models.product.findAll({
       raw: true,
       where,
       order,
-    })
-    .then(
-      (products) => {
-        res.render('product/products', {
-          title: '产品列表',
-          partials: {
-            nav: true,
-            footer: true,
-          },
-          products,
-        });
-      },
-      (err) => {
-        console.log(err.message);
-      }
-    );
-}
+    });
 
-async function showProduct(req, res) {
+    res.render('product/products', {
+      title: '产品列表',
+      partials: {
+        nav: true,
+        footer: true,
+      },
+      products,
+    });
+  } catch (err) {
+    processError(err);
+  }
+};
+
+exports.showProduct = async function (req, res) {
   const { id } = req.params;
 
-  Promise.all([
-    db.product.findOne({
-      where: {
-        id,
-      },
-      raw: true,
-    }),
-    db.review.findAll({
-      where: { product_id: id },
-      raw: true,
-      include: [{ model: db.user, attributes: ['username'] }],
-    }),
-  ]).then(
-    ([product, reviews]) => {
-      res.render('product/product', {
-        title: '产品详情',
-        partials: {
-          nav: true,
-          footer: true,
+  try {
+    const [product, reviews] = await Promise.all([
+      sequelize.models.product.findOne({
+        where: {
+          id,
         },
-        product,
-        reviews,
-      });
-    },
-    (err) => {
-      console.log(err.message);
-    }
-  );
-}
+        raw: true,
+      }),
+      sequelize.models.review.findAll({
+        where: { product_id: id },
+        raw: true,
+        include: [{ model: sequelize.models.user, attributes: ['username'] }],
+      }),
+    ]);
 
-module.exports = {
-  showAccount,
-  showOrders,
-  showShoppingCarts,
-  showReviews,
-  showHome,
-  showProducts,
-  showProduct,
-  showLogin,
-  showRegister,
+    res.render('product/product', {
+      title: '产品详情',
+      partials: {
+        nav: true,
+        footer: true,
+      },
+      product,
+      reviews,
+    });
+  } catch (err) {
+    processError(err);
+  }
 };
